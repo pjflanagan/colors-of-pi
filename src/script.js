@@ -1,5 +1,14 @@
 
-// Logic
+// Logic and Data
+
+const DATA = {
+  pi: '',
+  e: ''
+};
+
+async function loadData(number) {
+  DATA[number] = await $.get(`./src/numbers/${number}.txt`);
+}
 
 function makeColors(num) {
   return num.match(/.{1,6}/g);
@@ -39,7 +48,14 @@ class View {
         ${displayColor}
       </div>`);
   }
+
+  static clearColors() {
+    $('#container').empty();
+  }
   
+  static setNumber(number) {
+    $('#number-toggle').text(number === 'pi' ? 'π' : 'e');
+  }
 }
 
 
@@ -52,9 +68,12 @@ class Model {
     this.increaseSize.bind(this);
     this.decreaseSize.bind(this);
     this.toggleNumbers.bind(this);
+    this.toggleNumber.bind(this);
     this.proportionIndex = 4;
     this.areNumbersOn = false;
     this.colors = [];
+    this.number = 'pi';
+    this.timeout = 0;
   }
 
   setColors(colors) {
@@ -76,7 +95,7 @@ class Model {
     }
   
     const color = this.colors[i];
-    const displayColor = (i === 0) ? '3.14159' : color;
+    const displayColor = (i === 0) ? `${color[0]}.${color.substring(1)}` : color;
     View.appendElement({
       color,
       displayColor,
@@ -84,9 +103,22 @@ class Model {
       areNumbersOn: this.areNumbersOn
     });
 
-    setTimeout(() => {
+    this.timeout = setTimeout(() => {
       this.addElement(i + 1);
     }, 1);
+  }
+
+  async setNumber(number) {
+    this.number = number;
+    if (DATA[this.number] === '') {
+      await loadData(this.number);
+    }
+    clearTimeout(this.timeout);
+    View.clearColors();
+    View.setNumber(number);
+    const colors = makeColors(DATA[this.number]);
+    display.setColors(colors);
+    display.addElement(0);
   }
 
   // Display::actions
@@ -111,18 +143,14 @@ class Model {
     this.areNumbersOn = !this.areNumbersOn;
     View.changeNumberDisplay(this.areNumbersOn);
   }
+
+  toggleNumber() {
+    this.setNumber(this.number === 'pi' ? 'e' : 'pi');
+  }
 }
-
-
-// Display
-
 
 // Main
 
 const display = new Model();
+display.setNumber('pi');
 
-$.get('./src/numbers/pi.txt').then(pi => {
-  const colors = makeColors(pi);
-  display.setColors(colors);
-  display.addElement(0);
-});
