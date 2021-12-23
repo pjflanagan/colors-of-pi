@@ -1,4 +1,3 @@
-# ColorsOfPi V1
+# ColorsOfPi v1
 
-A visualization of pi, split up into sets of 6 digits to from hexadecimal colors.
-Uses python to split up text file of pi's digits and wrote to a html file with colorful divs representing its numbers.
+Uses python to split up a text file of Pi's digits into sets of 6 and wrote to a html file with colorful divs representing its numbers.
