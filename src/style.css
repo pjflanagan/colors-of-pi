@@ -1,0 +1,39 @@
+
+html, body, #container {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+/* Animation */
+
+@keyframes grow {
+  from { 
+    transform: scale(0.1); 
+  }
+  to { 
+    transform: scale(1); 
+  }
+}
+
+/* Container */
+
+#container div {
+  float: left;
+  width: 6.25vw;
+  height: 6.25vw;
+  text-align: center;
+  line-height: 6.25vw;
+  color: #fff0;
+  font-family: monospace;
+  transition: all 0.2s;
+  animation: grow 0.2s normal forwards ease-in-out;
+}
+
+#container:hover div {
+  color: #fff9;
+}
+
+#container div:hover {
+  color: #fffc;
+}
