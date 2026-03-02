@@ -3,8 +3,21 @@
 
 const DATA = {
   pi: '',
-  e: ''
+  e: '',
+  phi: ''
 };
+
+const NUMBERS = [
+  'pi',
+  'e',
+  'phi'
+]
+
+const NUMBER_NAMES = {
+  pi: 'π',
+  e: 'e',
+  phi: 'φ'
+}
 
 async function loadData(number) {
   DATA[number] = await $.get(`./src/numbers/${number}.txt`);
@@ -54,7 +67,7 @@ class View {
   }
   
   static setNumber(number) {
-    $('#number-toggle').text(number === 'pi' ? 'π' : 'e');
+    $('#number-toggle').text(NUMBER_NAMES[number]);
   }
 }
 
@@ -68,7 +81,7 @@ class Model {
     this.increaseSize.bind(this);
     this.decreaseSize.bind(this);
     this.toggleNumbers.bind(this);
-    this.toggleNumber.bind(this);
+    this.cycleNumber.bind(this);
     this.proportionIndex = 4;
     this.areNumbersOn = false;
     this.colors = [];
@@ -144,8 +157,10 @@ class Model {
     View.changeNumberDisplay(this.areNumbersOn);
   }
 
-  toggleNumber() {
-    this.setNumber(this.number === 'pi' ? 'e' : 'pi');
+  cycleNumber() {
+    const currentIndex = NUMBERS.indexOf(this.number);
+    const nextIndex = (currentIndex + 1) % NUMBERS.length;
+    this.setNumber(NUMBERS[nextIndex]);
   }
 }
 
